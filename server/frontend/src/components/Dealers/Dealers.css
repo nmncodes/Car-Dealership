@@ -33,6 +33,71 @@ table{
     margin:20px;
     padding:10px;
     font-size: larger;
+    cursor: pointer;
+  }
+
+  .postreview:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .postreview_container {
+    margin: 5%;
+    max-width: 700px;
+  }
+
+  .postreview_hint {
+    color: gray;
+    margin-bottom: 1rem;
+  }
+
+  .postreview_cancel {
+    margin-left: 1rem;
+    color: rgb(97, 64, 128);
+    text-decoration: none;
+  }
+
+  .postreview_cancel:hover {
+    text-decoration: underline;
+  }
+
+  .postreview_error {
+    color: #c0392b;
+    background: #fdecea;
+    border: 1px solid #f5c6cb;
+    padding: 10px 14px;
+    border-radius: 6px;
+    margin: 12px 0;
+  }
+
+  .postreview_dealer_info {
+    color: #555;
+    margin-bottom: 1rem;
+  }
+
+  .postreview_actions {
+    margin-top: 1rem;
+  }
+
+  .postreview_container .input_field {
+    margin: 12px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .postreview_container .input_field label {
+    font-weight: 600;
+    color: #333;
+  }
+
+  .postreview_container textarea,
+  .postreview_container select,
+  .postreview_container input[type="date"],
+  .postreview_container input[type="number"] {
+    padding: 8px;
+    font-size: 1rem;
+    max-width: 400px;
   }
 
   th{

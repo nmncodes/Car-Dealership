@@ -30,6 +30,7 @@ const Register = () => {
         headers: {
             "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify({
             "userName": userName,
             "password": password,
@@ -41,8 +42,9 @@ const Register = () => {
 
     const json = await res.json();
     if (json.status) {
-	// Save username in session and reload home
         sessionStorage.setItem('username', json.userName);
+        sessionStorage.setItem('firstname', firstName);
+        sessionStorage.setItem('lastname', lastName);
         window.location.href = window.location.origin;
     }
     else if (json.error === "Already Registered") {

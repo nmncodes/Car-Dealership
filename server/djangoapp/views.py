@@ -28,7 +28,9 @@ def login_user(request):
         login(request, user)
         response_data = {
             "userName": username,
-            "status": "Authenticated"
+            "status": "Authenticated",
+            "firstName": user.first_name,
+            "lastName": user.last_name,
         }
 
     return JsonResponse(response_data)
@@ -74,7 +76,9 @@ def registration(request):
 
         return JsonResponse({
             "userName": username,
-            "status": "Authenticated"
+            "status": "Authenticated",
+            "firstName": first_name,
+            "lastName": last_name,
         })
 
     return JsonResponse({
@@ -119,22 +123,20 @@ def get_dealer_reviews(request, dealer_id):
 
     endpoint = "/fetchReviews/dealer/" + str(dealer_id)
 
-    reviews = get_request(endpoint)
+    reviews = get_request(endpoint) or []
 
-    if reviews:
+    for review in reviews:
 
-        for review in reviews:
+        sentiment_response = analyze_review_sentiments(
+            review.get("review", "")
+        )
 
-            sentiment_response = analyze_review_sentiments(
-                review.get("review", "")
+        if sentiment_response:
+            review["sentiment"] = sentiment_response.get(
+                "sentiment", "neutral"
             )
-
-            if sentiment_response:
-                review["sentiment"] = sentiment_response.get(
-                    "sentiment", "neutral"
-                )
-            else:
-                review["sentiment"] = "neutral"
+        else:
+            review["sentiment"] = "neutral"
 
     return JsonResponse({
         "status": 200,
@@ -146,35 +148,35 @@ def get_dealer_details(request, dealer_id):
 
     dealer = get_request(endpoint)
 
+    if not dealer:
+        return JsonResponse({
+            "status": 404,
+            "message": "Dealer not found"
+        }, status=404)
+
     return JsonResponse({
         "status": 200,
         "dealer": dealer
     })
 
+@csrf_exempt
 def add_review(request):
 
-    if request.user.is_anonymous == False:
-
-        data = json.loads(request.body)
-
-        try:
-            response = post_review(data)
-
-            print(response)
-
-            return JsonResponse({
-                "status": 200
-            })
-
-        except:
-            return JsonResponse({
-                "status": 401,
-                "message": "Error in posting review, 401 error"
-            })
-
-    else:
-
+    if request.user.is_anonymous:
         return JsonResponse({
             "status": 403,
             "message": "Unauthorized access, login required to post a review"
+        })
+
+    data = json.loads(request.body)
+
+    try:
+        post_review(data)
+        return JsonResponse({"status": 200})
+
+    except Exception as err:
+        logger.error(f"Failed to post review: {err}")
+        return JsonResponse({
+            "status": 500,
+            "message": "Could not save review. Make sure the database service is running."
         })

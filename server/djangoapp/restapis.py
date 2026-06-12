@@ -35,27 +35,20 @@ def analyze_review_sentiments(text):
     request_url = sentiment_analyzer_url + "analyze/" + text
 
     try:
-        response = requests.get(request_url)
+        response = requests.get(request_url, timeout=2)
+        response.raise_for_status()
         return response.json()
 
-    except Exception as err:
-        print(f"Unexpected error {err=}, {type(err)=}")
-        print("Network exception occurred")
-        return None
+    except Exception:
+        return {"sentiment": "neutral"}
 
-# post review
 def post_review(data_dict):
     request_url = backend_url + "/insert_review"
 
-    try:
-        response = requests.post(
-            request_url,
-            json=data_dict
-        )
-
-        print(response.json())
-
-        return response.json()
-
-    except:
-        print("Network exception occurred")
+    response = requests.post(
+        request_url,
+        json=data_dict,
+        timeout=10
+    )
+    response.raise_for_status()
+    return response.json()
