@@ -62,7 +62,7 @@ return(
       <th>Dealer Name</th>
       <th>City</th>
       <th>Address</th>
-      <th>Zip</th>
+      <th>Zip Code</th>
       <th>
       <select name="state" id="state" onChange={(e) => filterDealers(e.target.value)}>
       <option value="" selected disabled hidden>State</option>
