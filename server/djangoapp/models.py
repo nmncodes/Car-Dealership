@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 
@@ -14,11 +16,13 @@ class CarModel(models.Model):
 
     SEDAN = "Sedan"
     SUV = "SUV"
+    HATCHBACK= "Hatchback"
     WAGON = "Wagon"
 
     CAR_TYPES = [
         (SEDAN, "Sedan"),
         (SUV, "SUV"),
+        (HATCHBACK, "Hatchback"),
         (WAGON, "Wagon"),
     ]
 
@@ -35,11 +39,13 @@ class CarModel(models.Model):
         choices=CAR_TYPES,
         default=SEDAN
     )
+    def current_year():
+        return datetime.datetime.now().year
 
     year = models.IntegerField(
         validators=[
-            MinValueValidator(2015),
-            MaxValueValidator(2023)
+            MinValueValidator(1980),
+            MaxValueValidator(current_year())
         ]
     )
 
