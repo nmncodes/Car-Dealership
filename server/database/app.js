@@ -100,8 +100,14 @@ app.post('/insert_review', express.json(), async (req, res) => {
   try {
     const data = req.body;
     const documents = await Reviews.find().sort({ id: -1 });
-    const new_id = documents.length > 0 ? documents[0].id + 1 : 1;
-
+    let new_id ;
+    if(documents.length > 0){
+      new_id = documents[0].id + 1;
+    }
+    else {
+      new_id = 1 ; 
+    }
+    
     const review = new Reviews({
       id: new_id,
       name: data.name,
@@ -118,7 +124,7 @@ app.post('/insert_review', express.json(), async (req, res) => {
     res.status(201).json(savedReview);
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: 'Error inserting review' });
+    res.status(500).json({ error: 'Error inserting review, try again or contact support' });
   }
 });
 

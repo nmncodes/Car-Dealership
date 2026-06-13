@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+# QWERTY(configure urls)
 backend_url = os.getenv(
     'backend_url', default="http://localhost:3030")
 sentiment_analyzer_url = os.getenv(
@@ -11,7 +12,6 @@ sentiment_analyzer_url = os.getenv(
     default="http://localhost:5000/")
 
 # def get_request(endpoint, **kwargs):
-# Add code for get requests to back end
 def get_request(endpoint, **kwargs):
     params = ""
 
